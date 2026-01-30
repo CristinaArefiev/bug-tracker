@@ -10,7 +10,6 @@ pipeline {
                 }
             }
             environment {
-                # build cache и модульный кэш Go кладём в workspace
                 GOCACHE    = "${WORKSPACE}/.go-cache"
                 GOMODCACHE = "${WORKSPACE}/.go-mod-cache"
             }
