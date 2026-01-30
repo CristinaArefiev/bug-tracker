@@ -7,18 +7,21 @@ pipeline {
                 docker {
                     image 'snakee/golang-junit:1.21'
                     reuseNode true
-                    }
-                    }
-                    steps {
-                        dir('bugtracker-backend') {
-                            sh '''
-                            echo "USER=$(whoami)"
-                            echo "HOME=$HOME"
-                            env | sort
-                            '''
-                            sh 'go test -v ./...'
-                        }
-                    }
+                }
+            }
+            environment {
+                # build cache и модульный кэш Go кладём в workspace
+                GOCACHE    = "${WORKSPACE}/.go-cache"
+                GOMODCACHE = "${WORKSPACE}/.go-mod-cache"
+            }
+            steps {
+                dir('bugtracker-backend') {
+                    sh '''
+                        mkdir -p $GOCACHE $GOMODCACHE
+                        go test -v ./...
+                    '''
+                }
+            }
         }
     }
 }
