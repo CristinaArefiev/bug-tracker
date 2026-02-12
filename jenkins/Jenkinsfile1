@@ -6,12 +6,20 @@ pipeline {
             agent {
                 docker {
                     image 'snakee/golang-junit:1.21'
+                    args '--network=host'
                     reuseNode true
                     }
             }
+            environment {
+                GOCACHE    = "${WORKSPACE}/.go-cache"
+                GOMODCACHE = "${WORKSPACE}/.go-mod-cache"
+            }
             steps {
                 dir('bugtracker-backend') {
-                    sh 'go test -v ./...'
+                    sh '''
+                        mkdir -p $GOCACHE $GOMODCACHE
+                        go test -v ./...
+                    '''
                 }
             }
         }
