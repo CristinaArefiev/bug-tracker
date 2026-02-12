@@ -9,9 +9,16 @@ pipeline {
                     reuseNode true
                     }
             }
+            environment {
+                GOCACHE    = "${WORKSPACE}/.go-cache"
+                GOMODCACHE = "${WORKSPACE}/.go-mod-cache"
+            }
             steps {
                 dir('bugtracker-backend') {
-                    sh 'go test -v ./...'
+                    sh '''
+                        mkdir -p $GOCACHE $GOMODCACHE
+                        go test -v ./...
+                    '''
                 }
             }
         }
